@@ -1,11 +1,4 @@
-export type EmailAccountConfig = {
-    user: string;
-    password: string;
-    host: string;
-    port: number;
-    tls: boolean;
-    name: string;
-};
+import { EmailAccountConfig } from "./types.js";
 
 export const ACCOUNT_KEYS = {
     EMAIL_USER_1: 'EMAIL_USER_1',
@@ -23,7 +16,7 @@ function configEmailAccounts(): EmailAccountConfig[] {
     }
 
     const accounts: EmailAccountConfig[] = [];
-    
+
     try {
         accounts.push({
             name: 'Account 1',
@@ -32,6 +25,14 @@ function configEmailAccounts(): EmailAccountConfig[] {
             host: 'imap.gmail.com',
             port: 993,
             tls: true,
+
+            maxMessages: 5,
+            dateRange: {
+                since: '2025-07-21',
+                before: '2025-07-24'
+            },
+            folders: ['INBOX'],
+            fetchOnStartup: true,
         });
 
         if (accounts.length === 0) {
@@ -40,7 +41,11 @@ function configEmailAccounts(): EmailAccountConfig[] {
 
         return accounts;
     } catch (error) {
-        throw new Error(`Failed to initialize email accounts: ${error instanceof Error ? error.message : String(error)}`);
+        throw new Error(`Failed to initialize email accounts: ${error instanceof Error
+                ? error.message
+                : String(error)
+            }`
+        );
     }
 }
 

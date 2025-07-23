@@ -38,6 +38,7 @@ debug/
 *.pem
 
 # Misc
+lastUids.json
 *.swp
 *.swo
 *~
