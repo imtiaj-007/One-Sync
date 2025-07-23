@@ -1,23 +1,11 @@
-version: '3.8'
-
 services:
-  app:
-    build: .
-    ports:
-      - "3000:3000"
-    depends_on:
-      - elasticsearch
-    environment:
-      - NODE_ENV=development
-    volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
-
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.0
+    image: docker.elastic.co/elasticsearch/elasticsearch:9.0.4
+    container_name: elasticsearch
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
     ports:
       - "9200:9200"
     volumes:
