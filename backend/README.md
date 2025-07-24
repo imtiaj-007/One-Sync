@@ -6,6 +6,7 @@ This is the backend service for **OneSync**, a onebox email aggregator platform.
 
 ## 📁 Project Structure
 
+```bash
 backend/
 ├── src/
 │   ├── ai/
@@ -35,6 +36,7 @@ backend/
 ├── Dockerfile                      # Dockerfile for backend service
 ├── docker-compose.yml              # Docker Compose configuration
 └── README.md                       # Project documentation
+```
 
 ---
 
