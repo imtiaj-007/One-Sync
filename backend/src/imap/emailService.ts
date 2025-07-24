@@ -9,11 +9,22 @@ import { EmailDocument } from '../elastic/types.js';
 import { EmailCategory } from '../ai/types.js';
 import { log } from '../utils/logger.js';
 
-
+/**
+ * Set tracking processed email IDs to prevent duplicate processing
+ */
 const processedEmails = new Set<string>();
+/**
+ * Maximum size of the processed emails cache before cleanup
+ */
 const MAX_CACHE_SIZE = 1000;
 
-
+/**
+ * Starts the email synchronization service for all configured accounts
+ * @async
+ * @function startEmailSync
+ * @throws {Error} When email credentials are missing or sync fails
+ * @returns {Promise<void>}
+ */
 export async function startEmailSync() {
     try {
         await ensureEmailIndexExists();
@@ -38,6 +49,13 @@ export async function startEmailSync() {
     }
 }
 
+/**
+ * Processes an incoming email by checking for duplicates, categorizing, and indexing it
+ * @async
+ * @function processEmail
+ * @param {ParsedEmail} email - The email to process
+ * @returns {Promise<void>}
+ */
 async function processEmail(email: ParsedEmail) {
     const emailId = email.messageId;
     if (processedEmails.has(emailId)) {
@@ -100,6 +118,11 @@ async function processEmail(email: ParsedEmail) {
     }
 }
 
+/**
+ * Adds an email ID to the processed cache and performs cleanup if cache exceeds max size
+ * @function addToProcessedCache
+ * @param {string} emailId - The email ID to add to cache
+ */
 function addToProcessedCache(emailId: string) {
     processedEmails.add(emailId);
     
