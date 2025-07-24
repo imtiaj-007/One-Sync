@@ -1,3 +1,13 @@
+export interface DateRange {
+    since?: Date;
+    before?: Date;
+}
+
+export interface SearchResult {
+    criteria: number[] | string;
+    isEmpty: boolean;
+}
+
 export type EmailAccountConfig = {
     user: string;
     password: string;
@@ -6,10 +16,7 @@ export type EmailAccountConfig = {
     tls: boolean;
     name: string;
     maxMessages?: number;
-    dateRange?: {
-        since?: string;
-        before?: string;
-    },
+    dateRange?: DateRange,
     folders?: string[];
     fetchOnStartup?: boolean;
 };

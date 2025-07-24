@@ -1,5 +1,8 @@
 import { EmailAccountConfig } from "./types.js";
 
+/**
+ * Object containing environment variable keys for email account configurations
+ */
 export const ACCOUNT_KEYS = {
     EMAIL_USER_1: 'EMAIL_USER_1',
     EMAIL_PASS_1: 'EMAIL_PASS_1',
@@ -7,9 +10,16 @@ export const ACCOUNT_KEYS = {
     EMAIL_PASS_2: 'EMAIL_PASS_2',
 } as const;
 
+/**
+ * Type representing the keys of ACCOUNT_KEYS object
+ */
 export type AccountKeys = keyof typeof ACCOUNT_KEYS;
 
-
+/**
+ * Configures email accounts by reading from environment variables
+ * @returns {EmailAccountConfig[]} Array of configured email accounts
+ * @throws {Error} When environment is not initialized or account configuration fails
+ */
 function configEmailAccounts(): EmailAccountConfig[] {
     if (!process.env) {
         throw new Error("Env is not initialized");
@@ -25,12 +35,6 @@ function configEmailAccounts(): EmailAccountConfig[] {
             host: 'imap.gmail.com',
             port: 993,
             tls: true,
-
-            maxMessages: 5,
-            dateRange: {
-                since: '2025-07-21',
-                before: '2025-07-24'
-            },
             folders: ['INBOX'],
             fetchOnStartup: true,
         });
@@ -51,6 +55,10 @@ function configEmailAccounts(): EmailAccountConfig[] {
 
 let _emailAccounts: EmailAccountConfig[] | null = null;
 
+/**
+ * Gets the configured email accounts, initializing them if not already done
+ * @returns {EmailAccountConfig[]} Array of configured email accounts
+ */
 export function getEmailAccounts(): EmailAccountConfig[] {
     if (!_emailAccounts) {
         _emailAccounts = configEmailAccounts();

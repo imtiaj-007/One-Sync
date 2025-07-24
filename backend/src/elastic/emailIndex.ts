@@ -2,8 +2,18 @@ import { elasticClient } from './client.js';
 import { EmailDocument } from './types.js';
 import { log } from '../utils/logger.js';
 
+/**
+ * The name of the Elasticsearch index for emails.
+ */
 const INDEX_NAME = 'emails';
 
+/**
+ * Ensures the email index exists in Elasticsearch.
+ * 
+ * This function checks if the email index exists in Elasticsearch. If it does not exist, it creates the index with the specified mappings.
+ * 
+ * @returns {Promise<void>} A promise that resolves when the index exists.
+ */
 export async function ensureEmailIndexExists() {
     const exists = await elasticClient.indices.exists({ index: INDEX_NAME });
     if (!exists) {
@@ -26,6 +36,14 @@ export async function ensureEmailIndexExists() {
     }
 }
 
+/**
+ * Indexes an email document in Elasticsearch.
+ * 
+ * This function indexes a given email document in the email index.
+ * 
+ * @param {EmailDocument} email - The email document to index.
+ * @returns {Promise<void>} A promise that resolves when the email is indexed.
+ */
 export async function indexEmail(email: EmailDocument) {
     await elasticClient.index({
         index: INDEX_NAME,
@@ -34,6 +52,14 @@ export async function indexEmail(email: EmailDocument) {
     });
 }
 
+/**
+ * Checks if an email exists in Elasticsearch.
+ * 
+ * This function checks if an email with the given ID exists in the email index.
+ * 
+ * @param {string} emailId - The ID of the email to check.
+ * @returns {Promise<boolean>} A promise that resolves to true if the email exists, false otherwise.
+ */
 export async function emailExists(emailId: string): Promise<boolean> {
     try {
         const response = await elasticClient.exists({
@@ -52,6 +78,13 @@ export async function emailExists(emailId: string): Promise<boolean> {
     }
 }
 
+/**
+ * Clears the email index from Elasticsearch.
+ * 
+ * This function deletes the email index from Elasticsearch.
+ * 
+ * @returns {Promise<any>} A promise that resolves to the response from Elasticsearch.
+ */
 export async function clearEmailIndex() {
     try {
         const indexName = 'emails';
