@@ -12,3 +12,14 @@ export interface EmailDocument {
     date: string;
     category: EmailCategory;
 }
+
+export interface SearchFilters {
+    q?: string;
+    from?: string;
+    to?: string;
+    category?: string;
+    folder?: string;
+    account?: string;
+    startDate?: string;
+    endDate?: string;
+}

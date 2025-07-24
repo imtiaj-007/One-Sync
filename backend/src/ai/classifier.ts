@@ -7,9 +7,11 @@ import { EmailCategory } from './types.js';
  * This function takes the text content of an email and uses an AI model to categorize it into one of the following categories:
  * - Interested
  * - Meeting Booked
- * - Not Interested
- * - Spam
  * - Out of Office
+ * - Not Interested
+ * - Promotion
+ * - Social
+ * - Spam
  * 
  * It constructs a prompt for the AI model, sends it to the model, and then processes the response to determine the category.
  * 
@@ -21,9 +23,11 @@ export async function categorizeEmailAI(text: string): Promise<EmailCategory> {
 You are an email assistant. Categorize the following email content into one of these categories:
 - Interested
 - Meeting Booked
-- Not Interested
-- Spam
 - Out of Office
+- Not Interested
+- Promotion
+- Social
+- Spam
 
 Respond with only the category name (no explanations).
 
@@ -48,6 +52,8 @@ ${text}
             'Not Interested',
             'Meeting Booked',
             'Out of Office',
+            'Promotion',
+            'Social',
             'Spam',
         ];
 

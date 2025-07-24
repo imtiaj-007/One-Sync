@@ -27,8 +27,8 @@ backend/
 │   ├── utils/
 │   │   ├── logger.ts               # Logging utility
 │   │   └── uidTracker.ts           # Utility for tracking IMAP UIDs
-│   ├── config/
-│   │   └── index.ts                # Configuration loader
+│   ├── routes/
+│   │   └── search.ts               # Get emails with filters
 │   └── index.ts                    # Entry point for backend service
 ├── .env                            # Environment variables
 ├── package.json                    # NPM dependencies and scripts
@@ -115,6 +115,8 @@ The backend uses **Gemini AI** to classify emails into categories like:
 * `Meeting Booked`
 * `Not Interested`
 * `Out of Office`
+* `Promotion`
+* `Social`
 * `Spam`
 
 You can use the exported `categorizeEmailAI(text)` function from `src/ai/classifier.ts` to run classification manually or on new emails.
