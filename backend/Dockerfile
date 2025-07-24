@@ -1,5 +1,5 @@
 # Use official Node.js image as base
-FROM node:16-alpine
+FROM node:22-alpine
 
 # Install Elasticsearch dependencies
 RUN apk add --no-cache curl bash
@@ -24,5 +24,5 @@ HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
     CMD curl -f http://elasticsearch:9200 || exit 1
 
 # Command to run the application
-CMD ["npm", "start"]
+CMD ["npm", "dev"]
 
