@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
     DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import { ChevronDown, SearchIcon } from 'lucide-react';
+import { CheckIcon, ChevronDown, SearchIcon } from 'lucide-react';
 import { useEmailStore } from '@/store/emailStore';
 import MailCard from './mail-card';
 
@@ -21,7 +21,8 @@ const MailLists: React.FC = () => {
         activeTab,
         setActiveTab,
         selectedStatus,
-        fetchEmails
+        fetchEmails,
+        selectEmail,
     } = useEmailStore();
 
 
@@ -32,24 +33,22 @@ const MailLists: React.FC = () => {
     ];
 
     const filteredMails = useMemo(() => {
-        if (selectedStatus !== 'All') {
-            return emails.filter(email => email.category === selectedStatus);
-        }
         if (activeTab === 'primary') {
             return emails.filter(email =>
-                ["Interested", "Meeting Booked", "Out of Office", "Not Interested"].includes(email.category)
+                ["Interested", "Meeting Booked", "Out of Office", "Promotion", "Not Interested"].includes(email.category)
             );
         } else if (activeTab === 'others') {
             return emails.filter(email =>
-                ["Spam", "Promotion", "Social"].includes(email.category)
+                ["Spam", "Social"].includes(email.category)
             );
         }
         return emails;
     }, [emails, activeTab, selectedStatus]);
 
     useEffect(() => {
-        fetchEmails()
-    }, [searchQuery]);
+        fetchEmails();
+        selectEmail(null);
+    }, [searchQuery, activeInbox, selectedStatus]);
 
     return (
         <div className='space-y-4 p-2 h-full flex flex-col'>
@@ -68,7 +67,9 @@ const MailLists: React.FC = () => {
                     {inboxes.map(({ name, value }, idx) => (
                         <React.Fragment key={value}>
                             <DropdownMenuItem onClick={() => setActiveInbox(value)}>
+                                <CheckIcon className={activeInbox === value ? '' : 'invisible'} />
                                 {name}
+                                <span className={`size-3 rounded-full ${value === 'Account 1' && 'bg-green-500'} ${value === 'Account 2' && 'bg-violet-500'}`} />
                             </DropdownMenuItem>
                             {idx === 0 && <DropdownMenuSeparator />}
                         </React.Fragment>

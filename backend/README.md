@@ -60,19 +60,20 @@ npm install
 Create a `.env` file in the `backend/` directory. Required environment variables:
 
 ```env
-GEMINI_API_KEY=your_gemini_api_key
-
+PORT=8000
 IMAP_HOST=imap.example.com
 IMAP_PORT=993
+ELASTICSEARCH_URL=http://localhost:9200
+ELASTICSEARCH_INDEX=emails
+
+// The following values should be updated
 
 EMAIL_USER_1=test.email1@gmail.com
 EMAIL_PASS_1=app_password_1
 EMAIL_USER_2=test.email2@gmail.com
 EMAIL_PASS_2=app_password_2
 
-ELASTICSEARCH_URL=http://localhost:9200
-ELASTICSEARCH_INDEX=emails
-
+GEMINI_API_KEY=your_gemini_api_key
 SLACK_WEBHOOK_URL=https://hooks.slack.com/services/...
 ```
 
@@ -171,9 +172,11 @@ Here are some planned features, improvements, and completed milestones for the b
 - **Webhook Integration for "Interested" Leads**  
   Pushes qualified leads to Slack in real time.
 
+- **REST API Integration for Email Retrieval**  
+  API endpoints for retrieving emails.
+
 ### 🧪 Coming Soon
 
-* REST API endpoints for email retrieval
 * RAG-powered reply generation
 
 ### 🚧 Planned
@@ -192,7 +195,16 @@ Here are some planned features, improvements, and completed milestones for the b
 
 ---
 
+## 📌 Notes
+
+* This backend was built specifically for the ReachInbox OneSync assignment.
+* Focused on performance, scalability, and speed.
+* Easily extendable for authentication, email previews, or replies.
+
+---
+
 ## 🧠 Author
 
 **SK Imtiaj Uddin**
-Feel free to reach out for any questions or suggestions!
+Built as part of the ReachInbox backend engineering assignment ☑️
+

@@ -121,7 +121,6 @@ export async function searchEmails(filters: SearchFilters) {
             bool: {
                 should: [
                     { term: { 'from.keyword': filters.from } },
-                    { match: { from: filters.from } }
                 ],
                 minimum_should_match: 1
             }
@@ -133,7 +132,6 @@ export async function searchEmails(filters: SearchFilters) {
             bool: {
                 should: [
                     { term: { 'to.keyword': filters.to } },
-                    { match: { to: filters.to } }
                 ],
                 minimum_should_match: 1
             }
@@ -145,7 +143,6 @@ export async function searchEmails(filters: SearchFilters) {
             bool: {
                 should: [
                     { term: { 'category.keyword': filters.category } },
-                    { match: { category: filters.category } }
                 ],
                 minimum_should_match: 1
             }
@@ -157,7 +154,6 @@ export async function searchEmails(filters: SearchFilters) {
             bool: {
                 should: [
                     { term: { 'folder.keyword': filters.folder } },
-                    { match: { folder: filters.folder } }
                 ],
                 minimum_should_match: 1
             }
@@ -169,7 +165,6 @@ export async function searchEmails(filters: SearchFilters) {
             bool: {
                 should: [
                     { term: { 'account.keyword': filters.account } },
-                    { match: { account: filters.account } }
                 ],
                 minimum_should_match: 1
             }

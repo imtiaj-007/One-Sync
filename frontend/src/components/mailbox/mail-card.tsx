@@ -1,8 +1,10 @@
 import React from 'react'
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Email } from '@/types/email';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useEmailStore } from '@/store/emailStore';
+import { Email } from '@/types/email';
+import { cn } from '@/lib/utils';
 
 
 function formatDate(dateStr: string) {
@@ -44,22 +46,33 @@ const MailCard: React.FC<{ email: Email }> = ({ email }) => {
     };
 
     return (
-        <Card className='gap-1 p-2.5 rounded-sm' onClick={handleClick} >
-            <div className="flex justify-between items-center gap-2">
-                <p className="font-semibold text-sm text-gray-900 dark:text-gray-100 truncate max-w-[65%]">
-                    {email.subject}
-                </p>
-                <Badge
-                    variant="outline"
-                    className={`${getCategoryColors(email.category)} text-[11px] px-1.5 py-0 flex-shrink-0 max-w-[35%] truncate`}
-                    title={email.category}
-                >
-                    {email.category}
-                </Badge>
-            </div>
-            <p className="text-xs text-gray-600 dark:text-gray-400 truncate">{email.text}</p>
-            <p className='text-xs text-end'>{formatDate(email.date)}</p>
-        </Card>
+        <Tooltip>
+            <Card
+                className={cn(
+                    'gap-1 p-2.5 rounded-sm border-y-0 border-r-0 border-l-4',
+                    email.account === 'Account 1' ? 'border-green-500' : 'border-violet-500'
+                )}
+                onClick={handleClick}
+            >
+                <TooltipTrigger>
+                    <div className="flex justify-between items-center gap-2">
+                        <p className="font-semibold text-sm text-gray-900 dark:text-gray-100 truncate max-w-[65%]">
+                            {email.subject}
+                        </p>
+                        <Badge
+                            variant="outline"
+                            className={`${getCategoryColors(email.category)} text-[11px] px-1.5 py-0 flex-shrink-0 max-w-[35%] truncate`}
+                            title={email.category}
+                        >
+                            {email.category}
+                        </Badge>
+                    </div>
+                    <p className="text-xs text-gray-600 dark:text-gray-400 truncate">{email.text}</p>
+                    <p className='text-xs text-end'>{formatDate(email.date)}</p>
+                </TooltipTrigger>
+            </Card>
+            <TooltipContent><p>{email.account}</p></TooltipContent>
+        </Tooltip>
     );
 };
 

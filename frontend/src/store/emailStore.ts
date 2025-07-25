@@ -11,7 +11,7 @@ interface EmailStore {
     labels: MailboxLabels;
 
     emails: Email[];
-    selectedEmail: Email | null;
+    selectedEmail: Email | null;    
     activeInbox: string;
     searchQuery: string;
     activeTab: 'primary' | 'others';
@@ -29,7 +29,7 @@ interface EmailStore {
     setActiveTab: (tab: 'primary' | 'others') => void;
     
     setEmails: (emails: Email[]) => void;
-    selectEmail: (email: Email) => void;
+    selectEmail: (email: Email | null) => void;
 
     fetchEmails: () => Promise<void>;
 }
@@ -63,14 +63,15 @@ export const useEmailStore = create<EmailStore>((set, get) => ({
     selectEmail: (email) => set({ selectedEmail: email }),
 
     fetchEmails: async () => {
-        const { selectedStatus, searchQuery } = get();
+        const { selectedStatus, activeInbox, searchQuery } = get();
         set({ isLoading: true, error: null });
 
         try {
             const response = await axios.get('http://localhost:8000/api/search', {
                 params: {
                     q: searchQuery,
-                    category: selectedStatus !== 'All' ? selectedStatus : undefined,
+                    ...(selectedStatus !== 'All' ? { category: selectedStatus } : {}),
+                    ...(activeInbox !== 'all' ? { account: activeInbox } : {})
                 },
             });
             set({ emails: response.data.emails, isLoading: false });
