@@ -1,5 +1,5 @@
 import { elasticClient } from './client.js';
-import { EmailDocument } from './types.js';
+import { EmailDocument, SearchFilters } from './types.js';
 import { log } from '../utils/logger.js';
 
 /**
@@ -100,5 +100,127 @@ export async function clearEmailIndex() {
             log.error('Failed to delete Elasticsearch index:', error);
             throw error;
         }
+    }
+}
+
+export async function searchEmails(filters: SearchFilters) {
+    const must: any[] = [];
+
+    if (filters.q && filters.q.trim()) {
+        must.push({
+            multi_match: {
+                query: filters.q,
+                fields: ['subject^2', 'text', 'html'],
+                fuzziness: 'AUTO',
+            }
+        });
+    }
+
+    if (filters.from) {
+        must.push({
+            bool: {
+                should: [
+                    { term: { 'from.keyword': filters.from } },
+                ],
+                minimum_should_match: 1
+            }
+        });
+    }
+
+    if (filters.to) {
+        must.push({
+            bool: {
+                should: [
+                    { term: { 'to.keyword': filters.to } },
+                ],
+                minimum_should_match: 1
+            }
+        });
+    }
+
+    if (filters.category) {
+        must.push({
+            bool: {
+                should: [
+                    { term: { 'category.keyword': filters.category } },
+                ],
+                minimum_should_match: 1
+            }
+        });
+    }
+
+    if (filters.folder) {
+        must.push({
+            bool: {
+                should: [
+                    { term: { 'folder.keyword': filters.folder } },
+                ],
+                minimum_should_match: 1
+            }
+        });
+    }
+
+    if (filters.account) {
+        must.push({
+            bool: {
+                should: [
+                    { term: { 'account.keyword': filters.account } },
+                ],
+                minimum_should_match: 1
+            }
+        });
+    }
+
+    if (filters.startDate || filters.endDate) {
+        const dateRange: any = {};
+        
+        if (filters.startDate) {
+            dateRange.gte = filters.startDate;
+        }
+        
+        if (filters.endDate) {
+            dateRange.lte = filters.endDate;
+        }
+
+        must.push({
+            range: {
+                date: dateRange
+            }
+        });
+    }
+
+    if (must.length === 0) {
+        must.push({ match_all: {} });
+    }
+
+    try {
+        const response = await elasticClient.search({
+            index: INDEX_NAME,
+            size: 100,
+            query: {
+                bool: {
+                    must
+                }
+            },
+            sort: [
+                { date: { order: 'desc' } }
+            ]
+        });
+
+        return {
+            total: response.hits.total,
+            emails: response.hits.hits.map((hit: any) => ({
+                id: hit._id,
+                score: hit._score,
+                ...hit._source,
+            }))
+        };
+
+    } catch (error: unknown) {
+        console.error('Elasticsearch search error:', error);
+        throw new Error(`Search failed: ${error instanceof Error 
+            ? error.message
+            : "Uncaught error in searchEmails."}`
+        );
     }
 }

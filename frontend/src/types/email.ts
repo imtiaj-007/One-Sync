@@ -2,8 +2,13 @@ export type EmailCategory =
     | 'Interested'
     | 'Meeting Booked'
     | 'Out of Office'
+    | 'Not Interested'
+    | 'Promotion'
+    | 'Social'
     | 'Spam'
-    | 'Not Interested';
+
+export type StatusFilter = EmailCategory | 'All';
+export type LabelFilter = 'all' | 'unread' | 'sent' | 'archive';
 
 export type Email = {
     id: string;
@@ -17,3 +22,19 @@ export type Email = {
     date: string;
     category: EmailCategory;
 };
+
+export interface Filters {
+    name: string;
+    value: StatusFilter;
+    circleColor: string;
+};
+
+export type MailboxFilters = Filters[];
+
+export interface Labels {
+    name: string;
+    value: LabelFilter;
+    icon: React.ElementType;
+};
+
+export type MailboxLabels = Labels[];

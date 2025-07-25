@@ -25,19 +25,31 @@ function configEmailAccounts(): EmailAccountConfig[] {
         throw new Error("Env is not initialized");
     }
 
-    const accounts: EmailAccountConfig[] = [];
+    let accounts: EmailAccountConfig[] = [];
 
     try {
-        accounts.push({
-            name: 'Account 1',
-            user: process.env[ACCOUNT_KEYS.EMAIL_USER_1]!,
-            password: process.env[ACCOUNT_KEYS.EMAIL_PASS_1]!,
-            host: 'imap.gmail.com',
-            port: 993,
-            tls: true,
-            folders: ['INBOX'],
-            fetchOnStartup: true,
-        });
+        accounts = accounts.concat([
+            {
+                name: 'Account 1',
+                user: process.env[ACCOUNT_KEYS.EMAIL_USER_1] as string,
+                password: process.env[ACCOUNT_KEYS.EMAIL_PASS_1] as string,
+                host: 'imap.gmail.com',
+                port: 993,
+                tls: true,
+                folders: ['INBOX'],
+                fetchOnStartup: true,
+            },
+            {
+                name: 'Account 2',
+                user: process.env[ACCOUNT_KEYS.EMAIL_USER_2] as string,
+                password: process.env[ACCOUNT_KEYS.EMAIL_PASS_2] as string,
+                host: 'imap.gmail.com',
+                port: 993,
+                tls: true,
+                folders: ['INBOX'],
+                fetchOnStartup: true,
+            }
+        ]);
 
         if (accounts.length === 0) {
             throw new Error('No valid email accounts configured');
@@ -46,8 +58,8 @@ function configEmailAccounts(): EmailAccountConfig[] {
         return accounts;
     } catch (error) {
         throw new Error(`Failed to initialize email accounts: ${error instanceof Error
-                ? error.message
-                : String(error)
+            ? error.message
+            : String(error)
             }`
         );
     }

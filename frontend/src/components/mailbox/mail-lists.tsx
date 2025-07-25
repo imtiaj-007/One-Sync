@@ -1,11 +1,12 @@
-import React from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useMemo } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
     DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import { ChevronDown, SearchIcon } from 'lucide-react';
+import { CheckIcon, ChevronDown, SearchIcon } from 'lucide-react';
 import { useEmailStore } from '@/store/emailStore';
 import MailCard from './mail-card';
 
@@ -18,27 +19,39 @@ const MailLists: React.FC = () => {
         searchQuery,
         setSearchQuery,
         activeTab,
-        setActiveTab
+        setActiveTab,
+        selectedStatus,
+        fetchEmails,
+        selectEmail,
     } = useEmailStore();
 
-    const filteredEmails = emails.filter((email) => {
-        const matchesTab = activeTab === 'primary'
-            ? ['Interested', 'Meeting Booked', 'Out of Office'].includes(email.category)
-            : ['Spam', 'Not Interested'].includes(email.category);
-        const matchesSearch = email.subject.toLowerCase().includes(searchQuery.toLowerCase());
-        const matchesInbox = activeInbox === 'all' || email.account === activeInbox;
-
-        return matchesTab && matchesSearch && matchesInbox;
-    });
 
     const inboxes = [
         { name: "All Inbox", value: "all" },
-        { name: "Imtiaj Dev's Inbox", value: "Account_1" },
-        { name: "Soul Survivour's Inbox", value: "Account_2" }
+        { name: "Imtiaj Dev's Inbox", value: "Account 1" },
+        { name: "Soul Survivour's Inbox", value: "Account 2" }
     ];
 
+    const filteredMails = useMemo(() => {
+        if (activeTab === 'primary') {
+            return emails.filter(email =>
+                ["Interested", "Meeting Booked", "Out of Office", "Promotion", "Not Interested"].includes(email.category)
+            );
+        } else if (activeTab === 'others') {
+            return emails.filter(email =>
+                ["Spam", "Social"].includes(email.category)
+            );
+        }
+        return emails;
+    }, [emails, activeTab, selectedStatus]);
+
+    useEffect(() => {
+        fetchEmails();
+        selectEmail(null);
+    }, [searchQuery, activeInbox, selectedStatus]);
+
     return (
-        <div className='space-y-4 p-2'>
+        <div className='space-y-4 p-2 h-full flex flex-col'>
             {/* Inbox Selector */}
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -54,7 +67,9 @@ const MailLists: React.FC = () => {
                     {inboxes.map(({ name, value }, idx) => (
                         <React.Fragment key={value}>
                             <DropdownMenuItem onClick={() => setActiveInbox(value)}>
+                                <CheckIcon className={activeInbox === value ? '' : 'invisible'} />
                                 {name}
+                                <span className={`size-3 rounded-full ${value === 'Account 1' && 'bg-green-500'} ${value === 'Account 2' && 'bg-violet-500'}`} />
                             </DropdownMenuItem>
                             {idx === 0 && <DropdownMenuSeparator />}
                         </React.Fragment>
@@ -77,22 +92,36 @@ const MailLists: React.FC = () => {
             </div>
 
             {/* Tabs for Primary / Others */}
-            <Tabs value={activeTab} onValueChange={(val) => setActiveTab(val as 'primary' | 'others')}>
-                <TabsList className='w-full'>
-                    <TabsTrigger value="primary" className="data-[state=active]:text-white data-[state=active]:bg-indigo-500 dark:data-[state=active]:bg-indigo-500">Primary</TabsTrigger>
-                    <TabsTrigger value="others" className="data-[state=active]:text-white data-[state=active]:bg-indigo-500 dark:data-[state=active]:bg-indigo-500">Others</TabsTrigger>
-                </TabsList>
-                <TabsContent value="primary" className='space-y-1 p-2'>                    
-                    {filteredEmails.map(email => (
-                        <MailCard key={email.id} email={email} />
-                    ))}
-                </TabsContent>
-                <TabsContent value="others" className='space-y-1'>
-                    {filteredEmails.map(email => (
-                        <MailCard key={email.id} email={email} />
-                    ))}
-                </TabsContent>
-            </Tabs>
+            <div className="flex-1 min-h-0 cursor-pointer">
+                <Tabs
+                    value={activeTab}
+                    onValueChange={(val) => setActiveTab(val as 'primary' | 'others')}
+                    className="h-full flex flex-col"
+                >
+                    <TabsList className='w-full'>
+                        <TabsTrigger value="primary" className="data-[state=active]:text-white data-[state=active]:bg-indigo-500 dark:data-[state=active]:bg-indigo-500">Primary</TabsTrigger>
+                        <TabsTrigger value="others" className="data-[state=active]:text-white data-[state=active]:bg-indigo-500 dark:data-[state=active]:bg-indigo-500">Others</TabsTrigger>
+                    </TabsList>
+                    <TabsContent
+                        value="primary"
+                        className='space-y-1 p-2 h-full max-h-[calc(100vh-16rem)] overflow-y-auto'
+                        style={{ scrollbarWidth: 'thin' }}
+                    >
+                        {filteredMails && filteredMails.length > 0 && filteredMails.map(email => (
+                            <MailCard key={email.id} email={email} />
+                        ))}
+                    </TabsContent>
+                    <TabsContent
+                        value="others"
+                        className='space-y-1 p-2 h-full max-h-[calc(100vh-16rem)] overflow-y-auto'
+                        style={{ scrollbarWidth: 'thin' }}
+                    >
+                        {filteredMails && filteredMails.length > 0 && filteredMails.map(email => (
+                            <MailCard key={email.id} email={email} />
+                        ))}
+                    </TabsContent>
+                </Tabs>
+            </div>
         </div>
     );
 };

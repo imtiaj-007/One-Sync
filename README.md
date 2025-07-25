@@ -1,42 +1,107 @@
-# Project Structure
+# 📦 OneSync - Email Aggregator
 
-The project is structured as follows:
+OneSync is a powerful onebox email aggregator that supports multiple account syncing, advanced AI-based classification, full-text search, and integrations.
 
-- `backend/`: Contains the backend code for the application.
-    - `src/`: Contains the source code for the backend.
-        - `ai/`: Contains the AI related code.
-            - `classifier.ts`: Contains the code for categorizing emails using an AI model.
-            - `geminiClient.ts`: Contains the code for initializing the Gemini AI model.
-        - `elastic/`: Contains the code for interacting with the Elasticsearch database.
-            - `types.ts`: Contains the types used in the Elasticsearch database.
-        - `index.ts`: The entry point of the backend application.
-    - `README.md`: Contains the documentation for the backend.
-    - `.env`: Contains the environment variables for the backend.
+This repository contains both the **frontend** and **backend** code for the OneSync project.
 
-- `frontend/`: Contains the frontend code for the application.
-    - `src/`: Contains the source code for the frontend.
-        - `App.js`: The main component of the frontend application.
-        - `index.js`: The entry point of the frontend application.
-    - `README.md`: Contains the documentation for the frontend.
-    - `.env`: Contains the environment variables for the frontend.
+---
 
-# Installation
+## 🚀 Project Overview
 
-To install the application, follow these steps:
+OneSync enables users to:
 
-1. Clone the repository: `git clone https://github.com/your-username/your-repo.git`
-2. Navigate to the project directory: `cd your-repo`
-3. Install the backend dependencies: `cd backend && npm install`
-4. Install the frontend dependencies: `cd frontend && npm install`
+* Sync emails in real time from multiple inboxes using IMAP
+* Store and search emails using Elasticsearch
+* Categorize emails into AI-powered labels like "Interested", "Meeting Booked", etc.
+* Trigger integrations like Slack/webhook on specific categories
+* View, search, and filter emails from a beautiful frontend UI
 
-# Running the Application
+---
 
-To run the application, follow these steps:
+## 📁 Directory Structure
 
-1. Start the backend: `cd backend && npm start`
-2. Start the frontend: `cd frontend && npm start`
+```bash
+.
+├── backend/         # FastAPI backend
+├── frontend/        # Next.js frontend
+└── README.md        # Root Readme (this file)
+```
 
-# Relevant Information
+---
 
-- The backend application uses the `GEMINI_API_KEY` environment variable to initialize the Gemini AI model. Make sure to set this environment variable before starting the backend.
-- The frontend application uses the `REACT_APP_BACKEND_URL` environment variable to connect to the backend. Make sure to set this environment variable before starting the frontend.
+## 🛠 How to Run the Project
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/imtiaj-007/One-Sync.git
+cd One-Sync
+```
+
+### 2. Start Elasticsearch (for search & categorization)
+
+```bash
+docker run -p 9200:9200 -e "discovery.type=single-node" elasticsearch:9.0.4
+```
+
+### 3. Run Backend
+
+```bash
+cd backend
+npm install
+npm run dev
+```
+
+### 4. Run Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Visit: [http://localhost:3000](http://localhost:3000)
+
+---
+
+## ✅ Completed Features
+
+### 1. **Real-time IMAP Email Sync**
+
+* Syncs last 30 days of emails from 2 accounts using IMAP IDLE mode
+
+### 2. **Elasticsearch Email Storage & Search**
+
+* Emails are indexed for full-text search
+* Advanced search APIs support filters for inbox, label, sender, and query text
+
+### 3. **AI Email Categorization**
+
+* Categorizes into: Interested, Meeting Booked, Not Interested, Spam, Out of Office
+* Uses Gemini-Pro with prompt engineering
+
+### 4. **Slack & Webhook Integration**
+
+* For emails labeled "Interested", sends notifications to Slack + external webhook
+
+### 5. **Frontend Interface**
+
+* Built with Next.js, Zustand, Shadcn UI, TailwindCSS
+* Inbox filter, AI category filter, keyword search
+* Beautiful table-based layout using shadCN components
+
+---
+
+## 📑 Refer to Child Readmes
+
+For detailed setup and usage instructions:
+
+* [`/frontend/README.md`](./frontend/README.md) — UI, structure, features
+* [`/backend/README.md`](./backend/README.md) — IMAP, search, AI categorization, integrations
+
+---
+
+## 👨‍💻 Author
+
+**SK Imtiaj Uddin**
+Built for the ReachInbox Backend Engineering Assignment ✅
