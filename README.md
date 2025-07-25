@@ -18,6 +18,12 @@ OneSync enables users to:
 
 ---
 
+## 📽️ Watch Demo
+
+[![Watch Demo](./frontend/public/loom-demo.png)](https://www.loom.com/share/c00291a75d6248658ba33476b1b07c38?sid=e0b5ae5d-f81b-4404-9bd4-3880e90ce450)
+
+---
+
 ## 📁 Directory Structure
 
 ```bash
